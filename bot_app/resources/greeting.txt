@@ -1,0 +1,4 @@
+Hello, how are you?
+<b>This bot can:</b>
+- show you cryptocurrency prices
+<i>(that's all for now)</i>
