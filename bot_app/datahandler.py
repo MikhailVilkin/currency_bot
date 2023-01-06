@@ -15,30 +15,49 @@ def _get_crypto_currencies():
                 'full_name': p[2] if p[3] == '' else p[2] + ' ' + p[3], 
                 'in_usd': p[6] if p[5] == '$' else p[5],
             }
-    return pretty_print_dict(r)
+    return _pretty_print_dict(r)
 
-def pretty_print_dict(d: dict) -> str:
+def _pretty_print_dict(d: dict) -> str:
     result = ""
     for key, value in d.items():
         result = result + "<b>" + key + "</b> (" + value["full_name"] + "): $" + value["in_usd"] + "\n"
     return result
 
-# # regexp = re.compile(r"<a onclick=\"update_hash\(&#\d+;.+&#\d+;\);\" href=\"javascript:void\(0\);\">(.*)</a>")
-# link = "https://bitinfocharts.com/cryptocurrency-prices/#CNY"
 
-# data = requests.get(link)
+def _get_conversion(message) -> str:
+    request = "https://www.google.com/search?q={}&hl=en".format(
+        message.replace(" ", "+")
+        )
+    data = requests.get(request)
+    page_soup = BeautifulSoup(data.text, "html.parser")
+    result = page_soup.findAll("div",{"class":"BNeawe iBp4i AP7Wnd"})
+    if result:
+        result = result[0].text
+    else:
+        result = page_soup.findAll("div",{"class":"Gx5Zad xpd EtOod pkphOe"})
+        result = result[0].get_text('\n').replace('\n,', ',')
+        r = re.compile(r".*\n(\w+\.com).*")
+        link = re.findall(r, result)
+        result = re.sub(
+            r'\n\w+\.com.+', 
+            '\n\n<b>Taken from: ' + link[0] + ' through Google Search</b>', 
+            result
+            )
+        result = result.replace('About Featured Snippets', '')
+    return result
 
-# soup = BeautifulSoup(data.content, 'html.parser')
-# res = soup.find_all('tr')
-# # res[1].find('td')
-# # for el in res[1:]:
-# #     print(el.text)
+# request = ['convert', 'water', 'to', 'wine']
+# google = "https://www.google.com/search?q={}&hl=en".format('+'.join(request))
 
-# # # regexp = r"(\w+)\s+(\w+)\s+\$\s+([\d,\.]+)\s+(.+)\s+in"
-# # # pattern = re.compile(regexp)
-# # r = {}
-# for el in res[1:10]:
-#     # p = el.text.split(' ')
-#     print(el.text)
+# data = requests.get(google)
 
-# # print(r)
+# page_soup = BeautifulSoup(data.text, "html.parser") 
+ 
+# nasdaqValue = page_soup.findAll("div",{"class":"Gx5Zad xpd EtOod pkphOe"})
+
+# result = nasdaqValue[0].get_text(';')
+# r = re.compile(r".*;(\w+\.com).*")
+# link = re.findall(r, result)
+# result = re.sub(r';\w+\.com.+', ';result: ' + link[0], result)
+
+# print(result)

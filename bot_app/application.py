@@ -18,6 +18,7 @@ class BotApp:
     def add_handlers(self):
         self.app.add_handler(CommandHandler("start", self.start_handler))
         self.app.add_handler(CallbackQueryHandler(self.button))
+        self.app.add_handler(MessageHandler(filters.Regex(r'.*convert.*'), self.currency_conversion))
         pass
 
     async def start_handler(self, update: Update, context: CallbackContext):
@@ -56,6 +57,15 @@ class BotApp:
         await context.bot.send_message(
             chat_id = query.message.chat_id,
             text = data, 
+            parse_mode = 'HTML'
+        )
+        pass
+    async def currency_conversion(self, update: Update, context: CallbackContext):
+        data = datahandler._get_conversion(update.message.text)
+        await context.bot.send_message(
+            chat_id = update.message.chat_id,
+            text = data,
+            reply_to_message_id = update.message.message_id, 
             parse_mode = 'HTML'
         )
         pass
