@@ -38,12 +38,15 @@ def _get_conversion(message) -> str:
         result = result[0].get_text('\n').replace('\n,', ',')
         r = re.compile(r".*\n(\w+\.com).*")
         link = re.findall(r, result)
-        result = re.sub(
-            r'\n\w+\.com.+', 
-            '\n\n<b>Taken from: ' + link[0] + ' through Google Search</b>', 
-            result
-            )
+        if link:
+            result = re.sub(
+                r'\n\w+\.com.+', 
+                '\n\n<b>Taken from: ' + link[0] + ' through Google Search</b>', 
+                result
+                )
         result = result.replace('About Featured Snippets', '')
+    if (result.startswith('Did you mean:')):
+        result = result + '?\n\n<b>Then go Google it!!!</b>😀'
     return result
 
 # request = ['convert', 'water', 'to', 'wine']
