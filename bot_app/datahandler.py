@@ -49,18 +49,3 @@ def _get_conversion(message) -> str:
         result = result + '?\n\n<b>Then go Google it!!!</b>😀'
     return result
 
-# request = ['convert', 'water', 'to', 'wine']
-# google = "https://www.google.com/search?q={}&hl=en".format('+'.join(request))
-
-# data = requests.get(google)
-
-# page_soup = BeautifulSoup(data.text, "html.parser") 
- 
-# nasdaqValue = page_soup.findAll("div",{"class":"Gx5Zad xpd EtOod pkphOe"})
-
-# result = nasdaqValue[0].get_text(';')
-# r = re.compile(r".*;(\w+\.com).*")
-# link = re.findall(r, result)
-# result = re.sub(r';\w+\.com.+', ';result: ' + link[0], result)
-
-# print(result)
